@@ -43,10 +43,22 @@ async function main() {
          res.status(404).send({"error": 404, "msg":"Are you dumb? This chicken does not exist."});
       }
    });
-   
-   app.get("/api/chickens", function(req, res){
+
+
+
+   app.get("/api/chickens/:filter",async function(req, res){
+      const filter = JSON.parse(req.params.filter);
+      console.log(filter);
+      chickens;
+      chickens = await Chicken.find(filter);
       res.send(chickens);
    });
+
+   app.get("/api/chickens",async function(req, res){
+      chickens = await Chicken.find();
+      res.send(chickens);
+   });
+
    
    app.delete("/api/chicken/:id", function(req, res){
       id = req.params.id;

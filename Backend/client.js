@@ -4,6 +4,13 @@ fetch("http://localhost:3000/api/chickens").then(
         (response) =>{req = response}).then(
             () => {console.log(req);});
 
+
+
+fetch("http://localhost:3000/api/chickens/"+JSON.stringify({color: "kinda blue kinda not"})).then(
+    (response) => {return response.json()}).then(
+        (response) =>{req = response}).then(
+            () => {console.log(req);});
+
 // Make a new chick named Chiquita
 fetch("http://localhost:3000/api/chicken", {
     method:"POST", 
