@@ -17,7 +17,22 @@ async function main() {
       age: {type: Number, required: true },
       color: {type: String, required: true }
    });
+
+   const monsterzSchema = new mongoose.Schema({ 
+      name: {type: String, required: true },
+      country: {type: String, required: true },
+      type: {type: String, required: true }
+   });
+
+   const Monsterz = mongoose.model("Monsterz", monsterzSchema);
    const Chicken = mongoose.model("Chicken", chickenSchema);
+
+   monsterz= {
+      1: {"name":"Godzilla", "country":"Japan", "type":"Lizard"},
+      2: {"name":"Mothra", "country":"Japan", "type":"Moth"},
+      3: {"name":"King Kong", "country":"USA", "type":"Ape"},
+      4: {"name":"Deminique", "country": "China", "type":"Dragon"}
+   }
    chickens =  {
       1: {"name":"Craig"},
       2: {"name":"Johhny"},
@@ -26,26 +41,45 @@ async function main() {
    next_id = 4;
    
    app.post("/api/chicken", async function(req, res){
-   chicken = await Chicken.create(req.body);
+      chicken = await Chicken.create(req.body);
       res.send({  "msg":"Chicken created successfully", "id": chicken["_id"], "chicken": chicken });
    });
    
+   app.post("/api/monsterz", async function(req, res){
+      monster = await Monsterz.create(req.body);
+      res.send({  "msg":"A monster is born", "id": monster["_id"], "monster": monster });
+   });
+
+//--------------------------------------------------------------
    app.put("/api/chicken/:id", async function(req, res){
       newChicken = req.body;
       id = req.params.id;
       chicken = await Chicken.findById(id);
       if(chicken){ // chicken exists
-
+         
          await Chicken.updateOne({_id: id}, {$set: newChicken});
-          chicken = await Chicken.findById(id);
+         chicken = await Chicken.findById(id);
          res.send({"id": chicken["_id"], "chicken": chicken});
       }else{
          res.status(404).send({"error": 404, "msg":"Are you dumb? This chicken does not exist."});
       }
    });
+   app.put("/api/monsterz/:id", async function(req, res){
+      newMonster = req.body;``
+      id = req.params.id;
+      monster = await Monsterz.findById(id);
 
-
-
+      if(monster){ // monster exists
+         await Monsterz.updateOne({_id: id}, {$set: newMonster});
+         monster = await Monsterz.findById(id);
+         res.send({"id": monster["_id"], "monster": monster});
+      }else{
+         res.status(404).send({"error": 404, "msg":"This monster sleeps in the crevices of the earth. Create it first."});
+      }
+   });
+   
+//--------------------------------------------------------------
+   
    app.get("/api/chickens/:filter",async function(req, res){
       const filter = JSON.parse(req.params.filter);
       console.log(filter);
@@ -54,26 +88,32 @@ async function main() {
       res.send(chickens);
    });
 
+   app.get("/api/monsterz/:filter",async function(req, res){
+      const filter = JSON.parse(req.params.filter);
+      console.log(filter);
+      monsterz;
+      monsterz = await Monsterz.find(filter);
+      res.send(monsterz);
+   });
+//--------------------------------------------------------------
+   
    app.get("/api/chickens",async function(req, res){
       chickens = await Chicken.find();
       res.send(chickens);
    });
-
    
-   app.delete("/api/chicken/:id", function(req, res){
-      id = req.params.id;
-      if(chickens[id]){
-         delete chickens[id];
-         res.send({"msg": `id=${id} is now nuggets. Can your pet referance`});
-      }else
-         {
-         res.status(404).send({"error": 404, "msg":"invisble nuggets"});
-      }
-   });  
+   app.get("/api/monsterz",async function(req, res){
+      monsters = await Monsterz.find();
+      res.send(monsters);
+   });
    
    
    app.get("/", function(req, res){
-      res.send("<h1>Hello, Guysh</h1>");
+      res.write("<h1>Hello, Guysh</h1>");
+      res.write("<h2>Available endpoints:</h2>");
+      res.write('<a href="http://localhost:3000/api/monsterz">Here lie the beasts</a>');
+      res.write('<p> \n </p>');
+      res.write('<a href="http://localhost:3000/api/chickens">And the chickens I guess</a>');
    });
    
    
@@ -89,40 +129,68 @@ async function main() {
             console.log("lmfao");
             res.status(404).send({"error": 404, "msg":"Are you dumb? This chicken does not exist."});      }
          }); 
-         
-         app.get("/chicken/:id", function(req, res){
-            index = req.params.id;
-            if (index > theFat.length -1){
-               res.send({"error": 404, "msg":"There is only one fat, do not try to find others. or else"});
-               
-            }else{
-               res.status(404).send({"error": 404, "msg":"There is only one fat, do not try to find others. or else"});
-            }
-            
-            res.send(theFat[index]);
+
+   app.get("/api/monsterz/:id", async function(req, res){
+      id = req.params.id;
+      try{monster = await Monsterz.findById(id);
+         if(monster){
+            console.log(monster);
+            res.send(monster);
+         }}catch(error){
+            console.log(error);
+            console.log("lmfao");
+            res.status(404).send({"error": 404, "msg":"This monster sleeps in the crevices of the earth. Create it first."});      }
          });
          
+//--------------------------------------------------------------         
+         
+         app.delete("/api/chicken/:id", async function(req, res){
+            id = req.params.id;
+            chicken = await Chicken.findById(id);
+            if(chicken){
+               try{
+                  await Chicken.deleteOne({_id: id});
+                  res.send({"message":`eated chicken of id=${id}`, "response_code":200});
+               }catch(err){
+                  console.error(err);
+                  res.status(500).send(err);
+               }
+            }else{
+               res.status(404).send({"error": 404, "msg":"Are you dumb? This chicken does not exist."});
+            }
+         });
+         
+         app.delete("/api/monsterz/:id", async function(req, res){
+            id = req.params.id;
+            monster = await Monsterz.findById(id);
+            if(monster){
+               try{
+                  await Monsterz.deleteOne({_id: id});
+                  res.send({"message":`slain monster of id=${id}`, "response_code":200});
+               }catch(err){
+                  console.error
+                  res.status(500).send(err); 
+               }
+            }else{
+               res.status(404).send({"error": 404, "msg":"You missed."});
+            }});
+         
+/*          app.delete("/api/chicken/:id", function(req, res){
+            id = req.params.id;
+            if(chickens[id]){
+               delete chickens[id];
+               res.send({"msg": `id=${id} is now nuggets. Can your pet referance`});
+            }else{
+               res.status(404).send({"error": 404, "msg":"invisble nuggets"});
+            }
+         });   */
          
          app.listen(3000, function(){
-            console.log("idk im listening");
+            console.log("les get it");
          });
       }
       
-      app.delete("/api/chicken/:id", async function(req, res){
-         id = req.params.id;
-         chicken = await Chicken.findById(id);
-         if(chicken){
-            try{
-            await Chicken.deleteOne({_id: id});
-            res.send({"message":`eated chicken of id=${id}`, "response_code":200});
-         }catch(err){
-            console.error(err);
-            res.status(500).send(err);
-         }
-         }else{
-            res.status(404).send({"error": 404, "msg":"Are you dumb? This chicken does not exist."});
-         }
-      });
+      
       
       /** TOOLS                              
       * `<p></p>`

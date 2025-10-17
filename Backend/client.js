@@ -1,36 +1,87 @@
+//FETCH ALL works
 // Fetch all of the chickens
 fetch("http://localhost:3000/api/chickens").then(
     (response) => {return response.json()}).then(
         (response) =>{req = response}).then(
             () => {console.log(req);});
 
-
-
-fetch("http://localhost:3000/api/chickens/"+JSON.stringify({color: "kinda blue kinda not"})).then(
+fetch("http://localhost:3000/api/monsterz").then(
     (response) => {return response.json()}).then(
         (response) =>{req = response}).then(
             () => {console.log(req);});
 
-// Make a new chick named Chiquita
+//FETCH ONLY ONE works
+// Fetch only this chicken
+fetch("http://localhost:3000/api/chickens/"+JSON.stringify({_id:"Your ID here"}))
+.then(
+    (response) => {return response.json()}).then(
+        (response) =>{req = response}).then(
+            () => {console.log(req);});
+
+//fetch only this monster
+fetch("http://localhost:3000/api/monsterz/"+JSON.stringify({_id:"Your ID here"}))
+.then(
+    (response) => {return response.json()}).then(
+        (response) =>{req = response}).then(
+            () => {console.log(req);});
+
+//FILTERS works
+//fetch a chicken of this color
+fetch("http://localhost:3000/api/chickens/"+JSON.stringify({color: "Your color here"}))
+.then(
+    (response) => {return response.json()}).then(
+        (response) =>{req = response}).then(
+            () => {console.log(req);});
+
+//fetch a monsterz of this name
+fetch("http://localhost:3000/api/monsterz/"+JSON.stringify({color: "Your color here"}))
+.then(
+    (response) => {return response.json()}).then(
+        (response) =>{req = response}).then(
+            () => {console.log(req);});
+
+//MAKE works
+// Make a new chick
 fetch("http://localhost:3000/api/chicken", {
     method:"POST", 
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({name: "Chiquita", age: "1", color:"yellow"}) })
-    .then((response) => {console.log(response.json())})
+    body:JSON.stringify({name: "Your name here", age: "Numarical age", color:"Your color here"}) })
+    .then((response) => {console.log(response.json())});
 
-// Update Chiquita to be older
-fetch("http://localhost:3000/api/chicken/3", 
+// Make a new monster
+fetch("http://localhost:3000/api/monsterz", {
+    method:"POST", 
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name: "Your name here", country: "Place of birth", type:"Your type here"}) })
+    .then((response) => {console.log(response.json())});
+
+//UPDATE
+// Update Chicken to be older works
+fetch(`http://localhost:3000/api/chicken/${encodeURIComponent("Your ID here")}`, 
     {method:"PUT", 
         headers:{'Content-Type':'application/json'}
-        ,body:JSON.stringify({age: "3"}) })
-        .then((response) => {console.log(response.json())})
+        ,body:JSON.stringify({age: "3300"}) })
+        .then((response) => {console.log(response.json())});
 
-// Fetch only Chiquita
-fetch("http://localhost:3000/api/chicken/3"
+// Update monster to be different
+fetch(`http://localhost:3000/api/monsterz/${encodeURIComponent("Your ID here")}`, 
+    {method:"PUT", 
+        headers:{'Content-Type':'application/json'}
+        ,body:JSON.stringify({type: "weird"}) })
+        .then((response) => {console.log(response.json())});
 
-).then((response) => {return response.json()})
-.then((response) =>{req = response})
-.then(() => {console.log(req);});
 
-// Delete Chiquita
-fetch("http://localhost:3000/api/chicken/3", {method:"DELETE"}).then((response) => {console.log(response.json())});
+//DELETE works
+// Delete chicken by id
+fetch(`http://localhost:3000/api/chicken/${encodeURIComponent("Your ID here")}`,
+{method:'DELETE'})
+.then(response => {
+    if (!response.ok) throw new Error(`Delete failed: ${response.status} ${response.statusText}`);
+    return response.json();});
+
+// Delete monster by id
+fetch(`http://localhost:3000/api/monsterz/${encodeURIComponent("Your ID here")}`,
+{method:'DELETE'})
+.then(response => {
+    if (!response.ok) throw new Error(`Delete failed: ${response.status} ${response.statusText}`);
+    return response.json();});
