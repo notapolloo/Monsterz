@@ -1,0 +1,8 @@
+include header
+include chickenviz
+h1 Monsters Here 
+h2 Here they are: 
+div.chickens 
+    div#loadingIcon loading
+    each chick in chickens 
+        +chicken(chick.name, chick.color)

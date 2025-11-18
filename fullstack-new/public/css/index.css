@@ -1,0 +1,39 @@
+h1 {
+    color:red;
+}
+.chickens {
+    display:flex;
+}
+
+#loadingIcon {
+  justify-content: space-evenly;
+  background-color:gold;
+  width:50px;
+}
+
+.chicken {
+    width: 50px;
+    height: 50px;
+    background-color: yellow;
+    transition: hop 1s ease-in-out infinite alternate;
+}
+
+.name {
+    display: none;
+}
+
+.chicken:hover > .name {
+    display: inline;
+}
+
+@keyframes hop {
+    0% {
+    transform: translateY(0); /* Starting position */
+  }
+  50% {
+    transform: translateY(-10px); /* Moves up slightly */
+  }
+  100% {
+    transform: translateY(0); /* Returns to starting position */
+  }
+}
