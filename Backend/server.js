@@ -5,13 +5,24 @@ num_visits = 0;
 const express = require("express");
 const app = express();
 const mongoose = require('mongoose');
+const cors = require("cors");
+const path = require('path');
+
 
 main();
 async function main() {
    
    mongoose.connect('mongodb://localhost/newdb');
    app.use(express.json());
-   
+   app.use(cors());
+   app.use(express.static(path.join(__dirname, 'public')));   
+   app.set("view engine", "pug");
+
+   //main page
+   app.get("/", function(req, res){
+      res.sendFile('i.html', { root: path.join(__dirname, 'public') });
+   });
+
    const chickenSchema = new mongoose.Schema({
       name: {type: String, required: true },
       age: {type: Number, required: true },
@@ -107,14 +118,6 @@ async function main() {
       res.send(monsters);
    });
    
-   
-   app.get("/", function(req, res){
-      res.write("<h1>Hello, Guysh</h1>");
-      res.write("<h2>Available endpoints:</h2>");
-      res.write('<a href="http://localhost:3000/api/monsterz">Here lie the beasts</a>');
-      res.write('<p> \n </p>');
-      res.write('<a href="http://localhost:3000/api/chickens">And the chickens I guess</a>');
-   });
    
    
    app.get("/api/chicken/:id", async function(req, res){
