@@ -5,6 +5,7 @@ fetch("http://localhost:3000/api/chickens").then(
         (response) =>{req = response}).then(
             () => {console.log(req);});
 
+// Fetch all of the monsters
 fetch("http://localhost:3000/api/monsterz").then(
     (response) => {return response.json()}).then(
         (response) =>{req = response}).then(

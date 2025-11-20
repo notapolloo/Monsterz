@@ -1,8 +1,0 @@
-//- this view is for rendering a list of chickens
-head
-    link(rel="stylesheet", href="css/chicken.css")
-
-ul 
-    each chicken in chickens
-        a(href="/chicken/"+chicken._id)
-            li= chicken.name
